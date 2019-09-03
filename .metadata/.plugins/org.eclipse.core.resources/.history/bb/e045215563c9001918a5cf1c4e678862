@@ -1,0 +1,18 @@
+package com.rmh;
+
+import com.rmh.list.ArrayList;
+
+public class Stack<E> extends ArrayList<E> {
+
+	public void push(E element) {
+		add(element);
+	}
+	
+	public void pop() {
+		remove(size - 1);
+	}
+	
+	public E top() {
+		return get(size - 1);
+	}
+}
