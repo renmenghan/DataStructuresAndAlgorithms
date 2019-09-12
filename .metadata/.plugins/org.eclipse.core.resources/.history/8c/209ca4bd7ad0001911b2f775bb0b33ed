@@ -1,0 +1,26 @@
+package 二叉树;
+/**
+ * https://leetcode-cn.com/problems/invert-binary-tree/
+ * @author rmh
+ *
+ */
+public class _226_翻转二叉树 {
+	public TreeNode invertTree(TreeNode root) {
+		if (root == null) {
+			return root;
+		}
+		TreeNode tmpNode = root.left;
+		root.left = root.right;
+		root.right = tmpNode;
+		
+        invertTree(root.left);
+        invertTree(root.right);
+        
+		return tmpNode;
+    }
+	
+	public static void main(String[] args) {
+		
+	}
+}
+

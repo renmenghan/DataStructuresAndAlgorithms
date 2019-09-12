@@ -1,8 +1,0 @@
-package com.rmh;
-
-public class Stack<E> {
-
-	public int size() {
-		return 0;
-	}
-}
