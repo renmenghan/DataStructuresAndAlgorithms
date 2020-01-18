@@ -68,11 +68,64 @@ public class BinarySearchTree<E> implements BinaryTreeInfo {
 	}
 	
 	public void remove(E element) {
-		
+		remove(node(element));
 	}
 	
 	public boolean contains(E element) {
 		return false;
+	}
+	
+	private void remove(Node<E> node) {
+		if (node == null) {
+			return;
+		}
+		
+		size--;
+		if (node.hasTwoChildren()) { // 度为2的节点
+			// 后继节点
+			Node<E> s = successor(node);
+			node.element = s.element;
+			node = s;// 删除后继节点
+		}
+		// 删除node节点 node的度必然为1或者0
+		Node<E> repleacement = node.left!=null ? node.left:node.right;
+		if (repleacement!=null) { // node是度为1的情况
+			// 更改parent
+			repleacement.parent = node.parent;
+			// 更改 parent right/left指向
+			if (node.parent == null) { // node是度为1的节点并且是根结点
+				root = repleacement;
+			}else if (node == node.parent.left) {
+				node.parent.left = repleacement;
+			}else {
+				node.parent.right = repleacement;
+			}
+			
+		}else if(node.parent == null){ // node是叶子节点并且根结点
+			root = null;
+		}else {///不是根结点
+			if (node == node.parent.right) {
+				node.parent.right = null;
+			}else {
+				node.parent.left = null;
+			}
+		}
+		
+	}
+	
+	private Node<E> node(E element) {
+		Node<E> node = root;
+		while (node != null) {
+			int cmp  = compare(element, node.element);
+			if (cmp == 0) return node;
+			if ( cmp > 0 ) {
+				node = node.right;
+			}else {
+				node = node.left;
+			}
+		}
+		return null;
+		
 	}
 	
 	/**
@@ -286,6 +339,48 @@ public class BinarySearchTree<E> implements BinaryTreeInfo {
 	}
 	
 	
+	public Node<E> predecessor(Node<E> node){
+		if (node == null) {
+			return null;
+		}
+		Node<E> p = node.left;
+		if (p != null) {
+			// 前驱节点在左子树当中 （left.right.right）
+			while (p.right != null) {
+				p = p.right;
+			}
+			return p;
+		}
+		// 从父节点 祖父节点中寻找前驱节点
+		while (node.parent != null && node == node.parent.left) {
+			node =  node.parent;
+		}
+		// parent == null 
+		// node == node.parent.right
+		return node.parent;
+	}
+	
+	
+	public Node<E> successor(Node<E> node){
+		if (node == null) {
+			return null;
+		}
+		Node<E> p = node.right;
+		if (p != null) {
+			// 前驱节点在右子树当中 （right.left.left）
+			while (p.left != null) {
+				p = p.left;
+			}
+			return p;
+		}
+		// 从父节点 祖父节点中寻找前驱节点
+		while (node.parent != null && node == node.parent.right) {
+			node =  node.parent;
+		}
+		// parent == null 
+		// node == node.parent.right
+		return node.parent;
+	}
 	
 	
 	public static abstract class Visitor<E> {
